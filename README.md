@@ -1,4 +1,5 @@
-so the .py version is the precomiled and need to be run (its got a python shabeng line) and is tied up to '/stuff'
+So the .py version is  precomiled and need to be run (its got a python shabeng line) along side to '/stuff'
 
-the .bin version is a compiled standalone file
+The .bin version is a compiled standalone file
 so the stuff + py is just the source code and might change and recompile to .bin
+
