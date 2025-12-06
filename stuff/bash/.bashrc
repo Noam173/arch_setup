@@ -47,6 +47,8 @@ alias mkdir='mkdir -p'
 alias ps='ps auxf'
 alias ping='ping -c 10'
 alias cat=bat
+alias cls='clear'
+
 
 alias ~='cd ~'
 alias ..='cd ..'
