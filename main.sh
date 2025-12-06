@@ -31,7 +31,11 @@ rm -rf zed/
 git clone https://github.com/noam173/zed
 
 
-echo the paru config was copied to .config, please install paru from linutil
+git config --global credential.helper store
+echo "https://<username>:<token>@github.com" > "$HOME/.git-credentials"
+
+
+echo "the paru config was copied to $HOME/.config/paru/paru.conf, please install paru from linutil"
 echo "launch linutil? [y/N]"
 read -r ans
 if [[ "$ans" == "y" || "$ans" == "Y" ]]; then
