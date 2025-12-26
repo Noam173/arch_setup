@@ -23,6 +23,7 @@ fi
 # EXPORTS
 #######################################################
 
+if [[ $iatest -gt 0 ]]; then bind "set bell-style none"; fi
 
 # Expand the history size
 export HISTFILESIZE=10000
