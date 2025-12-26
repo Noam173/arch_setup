@@ -93,8 +93,8 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # EG: the ls command is aliased, but to use the normal ls command you would type \ls
 
 # Edit this .bashrc file
-alias ebrc='nvim ~/.bashrc'
-
+alias bashedit='nvim ~/.bashrc'
+alias zed='zeditor'
 
 # Alias's to modified commands
 alias cp='cp -i'
