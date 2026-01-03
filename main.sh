@@ -2,24 +2,23 @@
 
 cwd="$PWD"
 
+check_command() {
+    command -v $1 >/dev/null 2>&1 || return 1
+}
+
 neccesary() {
     sudo chown -R $USER:$USER ~/.config
-    paru -S nano uv waybar wofi firefox --noconfirm
-    paru -S hyprland xdg-desktop-portal-hyprland slurp grim wl-clipboard --noconfirm
-    paru -S kitty ttf-meslo-nerd --noconfirm
-
-    paru -S pipewire-pulse pavucontrol --noconfirm
-    sudo systemctl enable pipewire-pulse --now
-}
-
-check() {
-    if [[ ! -d "$HOME/tmp" ]]; then
-
-    url="https://github.com/ChrisTitusTech/linutil"
-    git clone "$url" "$HOME/tmp"
-
+    pkgs=("neovim" "uv" "waybar" "wofi" "firefox" "hyprland" "xdg-desktop-portal-hyprland" "slurp" "grim" "wl-clipboard" "kitty" "ttf-meslo-nerd" "pipewire-pulse" "pavucontrol")
+    for i in $pkgs;do
+        if ! check_command "$i"; then
+            sudo paru -S "$i" --noconfirm
+        fi
+    done
+    if check_command pipewire-pulse; then
+        sudo systemctl enable pipewire-pulse --now
     fi
 }
+
 
 scripts() {
     files="$(find "$(dirname "$0")" -name 'setup*')"
@@ -28,47 +27,49 @@ scripts() {
     done
 }
 
+
 zed_install() {
-    paru -S zed --noconfirm
-    rm -rf "$HOME/.config/zed/"
+    if ! check_command zeditor; then
+        paru -S zed --noconfirm
+    fi
+    if [ -f "$HOME/.config/zed/" ]; then
+        rm -rf "$HOME/.config/zed/"
+    fi
     git clone https://github.com/noam173/zed "$HOME/.config/zed/"
 }
 
+
 git_cred() {
-    if [[ ! -f "$HOME/.git-credentials" ]]; then
-    echo "https://<username>:<token>@github.com" > "$HOME/.git-credentials"
+    if [ ! -f "$HOME/.git-credentials" ]; then
+        echo "https://<username>:<token>@github.com" > "$HOME/.git-credentials"
     fi
     git config --global credential.helper store
 }
 
+
 clearSource() {
-    check
-    file_name='system-cleanup.sh'
-    path='./core/tabs/system-setup'
-    cd "$path"
-    . "$file_name"
-    cd "$cwd"
-    if [[ -f "$HOME/.bashrc" ]]; then
-    clear && source "$HOME/.bashrc"
+    sudo rm -rf /tmp/* /var/tmp/* /var/log/*.log
+    paru -Rns $(paru -Qtdq) --noconfirm > /dev/null || true
+    if [ -f "$HOME/.bashrc" ]; then
+        clear && source "$HOME/.bashrc"
     fi
 }
 
 
 paru_install() {
-    check
-    file_name="paru-setup.sh"
-    path="$HOME/tmp/core/tabs/system-setup/arch/"
-    cd "$path"
-    . "$file_name"
+    if ! check_command paru; then
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
+        makepkg -si --noconfirm
+    fi
     cd "$cwd"
 }
-
 
 paru_install
 neccesary
 scripts
-git_cred
 zed_install
+git_cred
 clearSource
 
 
