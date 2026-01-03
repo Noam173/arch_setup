@@ -13,7 +13,7 @@ neccesary() {
     pkgs=("neovim" "uv" "waybar" "wofi" "firefox" "hyprland" "xdg-desktop-portal-hyprland" "slurp" "grim" "wl-clipboard" "kitty" "ttf-meslo-nerd" "pipewire-pulse" "pavucontrol")
     for i in "${pkgs[@]}";do
         if ! package_exist "$i"; then
-            sudo paru -S "$i" --noconfirm
+            paru -S "$i" --noconfirm
         fi
     done
     if check_command pipewire-pulse; then
