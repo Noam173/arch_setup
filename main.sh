@@ -10,8 +10,9 @@ package_exist() {
 
 
 neccesary() {
-    pkgs=("neovim" "uv" "waybar" "wofi" "firefox" "hyprland" "xdg-desktop-portal-hyprland" "slurp" "grim" "wl-clipboard" "kitty" "ttf-meslo-nerd" "pipewire-pulse" "pavucontrol")
-    for i in "${pkgs[@]}";do
+    mkdir -p "$HOME/.config"
+    pkgs=("neovim" "uv" "firefox" "slurp" "grim" "wl-clipboard" "pipewire-pulse" "pavucontrol")
+    for i in $pkgs;do
         if ! package_exist "$i"; then
             paru -S "$i" --noconfirm
         fi
@@ -19,14 +20,24 @@ neccesary() {
     if check_command pipewire-pulse; then
         sudo systemctl enable pipewire-pulse --now > /dev/null || true
     fi
+    zed_install
 }
 
 
 scripts() {
-    files="$(find "$(dirname "$0")" -name 'setup*' -type f)"
-    for script in $files;do
-        uv run "$script"
+    dir=$(find "$(dirname "$0")" -name "config" -type d)
+    cd $dir
+    files=$(find -name "*.sh" -type f)
+    pkgs=("fastfetch" "bat" "hyprland" "xdg-desktop-portal-hyprland" "kitty" "ttf-meslo-nerd" "waybar" "wofi")
+    for script in $files; do
+        $script
     done
+    for i in $pkgs; do
+        if ! package_exist $i; then
+            paru -S $i --noconfirm
+        fi
+    done
+    cd $cwd
 }
 
 
@@ -68,15 +79,14 @@ paru_install() {
 }
 
 
-paru_install
-neccesary
+#paru_install
+#neccesary
 scripts
-zed_install
-git_cred
-clearSource
+#git_cred
+#clearSource
 
-echo "reboot? [Y/n]"
-read -r ans
-if [[ "$ans" != "n" && "$ans" != "N" ]]; then
-    reboot
-fi
+#echo "reboot? [Y/n]"
+#read -r ans
+#if [[ "$ans" != "n" && "$ans" != "N" ]]; then
+#    reboot
+#fi
