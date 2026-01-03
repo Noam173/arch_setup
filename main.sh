@@ -79,14 +79,14 @@ paru_install() {
 }
 
 
-#paru_install
-#neccesary
+paru_install
+neccesary
 scripts
-#git_cred
-#clearSource
+git_cred
+clearSource
 
-#echo "reboot? [Y/n]"
-#read -r ans
-#if [[ "$ans" != "n" && "$ans" != "N" ]]; then
-#    reboot
-#fi
+echo "reboot? [Y/n]"
+read -r ans
+if [[ "$ans" != "n" && "$ans" != "N" ]]; then
+    reboot
+fi
