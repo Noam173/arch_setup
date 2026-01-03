@@ -1,38 +1,40 @@
 #!/usr/bin/env bash
 
 cwd="$PWD"
-
 check_command() {
     command -v $1 >/dev/null 2>&1 || return 1
 }
+package_exist() {
+    paru -Qe $1 >/dev/null 2>&1 || return 1
+}
+
 
 neccesary() {
-    sudo chown -R $USER:$USER ~/.config
     pkgs=("neovim" "uv" "waybar" "wofi" "firefox" "hyprland" "xdg-desktop-portal-hyprland" "slurp" "grim" "wl-clipboard" "kitty" "ttf-meslo-nerd" "pipewire-pulse" "pavucontrol")
-    for i in $pkgs;do
-        if ! check_command "$i"; then
+    for i in "${pkgs[@]}";do
+        if ! package_exist "$i"; then
             sudo paru -S "$i" --noconfirm
         fi
     done
     if check_command pipewire-pulse; then
-        sudo systemctl enable pipewire-pulse --now
+        sudo systemctl enable pipewire-pulse --now > /dev/null || true
     fi
 }
 
 
 scripts() {
-    files="$(find "$(dirname "$0")" -name 'setup*')"
+    files="$(find "$(dirname "$0")" -name 'setup*' -type f)"
     for script in $files;do
-    uv run "$script"
+        uv run "$script"
     done
 }
 
 
 zed_install() {
-    if ! check_command zeditor; then
+    if ! package_exist zed; then
         paru -S zed --noconfirm
     fi
-    if [ -f "$HOME/.config/zed/" ]; then
+    if [ -d "$HOME/.config/zed/" ]; then
         rm -rf "$HOME/.config/zed/"
     fi
     git clone https://github.com/noam173/zed "$HOME/.config/zed/"
@@ -65,6 +67,7 @@ paru_install() {
     cd "$cwd"
 }
 
+
 paru_install
 neccesary
 scripts
@@ -72,12 +75,8 @@ zed_install
 git_cred
 clearSource
 
-
-rm -rf "$HOME/tmp"
 echo "reboot? [Y/n]"
 read -r ans
 if [[ "$ans" != "n" && "$ans" != "N" ]]; then
-
-reboot
-
+    reboot
 fi
