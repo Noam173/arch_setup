@@ -1,5 +1,5 @@
-files=$(find "$(dirname "$0")" -not -name *.sh -type f)
+files=$(find "$(dirname $0)" -not -name *.sh -type f)
 mkdir -p "$HOME/.config/kitty"
-for i in $files; do
+for i in ${files[@]}; do
     cp $i "$HOME/.config/kitty"
 done
