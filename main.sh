@@ -4,18 +4,11 @@ cwd="$PWD"
 check_command() {
   command -v "$1" >/dev/null 2>&1 || return 1
 }
-package_exist() {
-  paru -Qe "$1" >/dev/null 2>&1 || return 1
-}
 
 neccesary() {
+  . ./config/install_pkgs.sh
+  idk
   mkdir -p "$HOME/.config"
-  pkgs=("neovim" "uv" "firefox" "slurp" "grim" "wl-clipboard" "pipewire-pulse" "pavucontrol")
-  for i in "${pkgs[@]}"; do
-    if ! package_exist "$i"; then
-      paru -S "$i" --noconfirm
-    fi
-  done
   if check_command pipewire-pulse; then
     sudo systemctl enable pipewire-pulse --now >/dev/null || true
   fi
@@ -23,17 +16,12 @@ neccesary() {
 }
 
 scripts() {
-  dir="$(find "$(dirname $0)" -name "config" -type d)"
+  dir="$(find "$(dirname "$0")" -name "config" -type d)"
   cd "$dir" || exit
-  files=$(find -name "*.sh" -type f)
-  pkgs=("fastfetch" "bat" "hyprland" "xdg-desktop-portal-hyprland" "kitty" "ttf-meslo-nerd" "waybar" "wofi")
+  files=$(find . -name "*.sh" -type f)
+  pkgs=("fastfetch" "bat" "kitty" "ttf-meslo-nerd" "waybar" "wofi")
   for script in "${files[@]}"; do
     $script
-  done
-  for i in "${pkgs[@]}"; do
-    if ! package_exist "$i"; then
-      paru -S "$i" --noconfirm
-    fi
   done
   cd "$cwd" || exit
 }
