@@ -3,7 +3,7 @@ package_exist() {
 }
 default=("uv" "firefox" "pipewire-pulse" "pavucontrol")
 idk() {
-  for i in "$@"; do
+  for i in $@; do
     if ! package_exist "$i"; then
       paru -S "$i" --noconfirm
     fi

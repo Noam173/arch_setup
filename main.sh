@@ -6,8 +6,6 @@ check_command() {
 }
 
 neccesary() {
-  . ./config/install_pkgs.sh
-  idk
   mkdir -p "$HOME/.config"
   if check_command pipewire-pulse; then
     sudo systemctl enable pipewire-pulse --now >/dev/null || true
@@ -19,27 +17,13 @@ scripts() {
   dir="$(find "$(dirname "$0")" -name "config" -type d)"
   cd "$dir" || exit
   files=$(find . -name "*.sh" -type f)
-  pkgs=("fastfetch" "bat" "kitty" "ttf-meslo-nerd" "waybar" "wofi")
-  for script in "${files[@]}"; do
+  for script in ${files[@]}; do
     $script
   done
   cd "$cwd" || exit
 }
-lazyvim_install() {
-  rm -rf "$HOME/.config/nvim{,.bak}"
-  cd "$HOME/.local/" || exit
-  rm -rf share/nvim state/nvim
-  rm -rf "$HOME/.cache/nvim"
-  if ! package_exist neovim; then
-    paru -S neovim --noconfirm
-  fi
-  if [ ! -d "$HOME/.config/nvim/lua/" ]; then
-    git clone https://github.com/LazyVim/starter ~/.config/nvim
-    rm -rf ~/.config/nvim/.git
-  fi
-}
 zed_install() {
-  if ! package_exist zed; then
+  if ! check_command zeditor; then
     paru -S zed --noconfirm
   fi
   if [ -d "$HOME/.config/zed/" ]; then
@@ -57,10 +41,8 @@ git_cred() {
 
 clearSource() {
   sudo rm -rf /tmp/* /var/tmp/* /var/log/*.log
-  paru -Rns "$(paru -Qtdq)" --noconfirm >/dev/null || true
-  if [[ -f "$HOME/.bashrc" ]]; then
-    clear && source "$HOME/.bashrc"
-  fi
+  paru -Rns "$(paru -Qtdq)" --noconfirm > /dev/null || true
+  clear; source ~/.bashrc
 }
 
 paru_install() {
