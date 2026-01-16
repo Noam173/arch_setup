@@ -10,7 +10,7 @@ neccesary() {
   if check_command pipewire-pulse; then
     sudo systemctl enable pipewire-pulse --now >/dev/null || true
   fi
-  zed_install
+  #  zed_install
 }
 
 scripts() {
@@ -41,8 +41,9 @@ git_cred() {
 
 clearSource() {
   sudo rm -rf /tmp/* /var/tmp/* /var/log/*.log
-  paru -Rns "$(paru -Qtdq)" --noconfirm > /dev/null || true
-  clear; source ~/.bashrc
+  paru -Rns "$(paru -Qtdq)" --noconfirm >/dev/null || true
+  clear
+  source ~/.bashrc
 }
 
 paru_install() {
@@ -51,7 +52,8 @@ paru_install() {
     cd paru || exit
     makepkg -si --noconfirm
   fi
-  cd "$cwd" || exit
+  cd .. || exit
+  rm -rf paru/
 }
 
 paru_install
