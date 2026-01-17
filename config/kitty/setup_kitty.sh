@@ -5,4 +5,4 @@ mkdir -p "$HOME/.config/kitty"
 for i in $files; do
   cp "$i" "$HOME/.config/kitty"
 done
-idk "kitty" "ttf-meslo-nerd"
+idk kitty ttf-meslo-nerd

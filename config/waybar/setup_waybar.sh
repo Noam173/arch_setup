@@ -5,4 +5,4 @@ mkdir -p "$HOME/.config/waybar"
 for i in $files; do
   cp "$i" "$HOME/.config/waybar"
 done
-idk "waybar"
+idk waybar

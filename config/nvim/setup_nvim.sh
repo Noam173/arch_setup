@@ -1,6 +1,6 @@
 echo "running nvim setup"
 . "$(dirname "$(dirname "$0")")/install_pkgs.sh"
-idk neovim
+idk neovim npm
 
 if [ -d "$HOME/.config/nvim/" ]; then
   rm -rf "$HOME/.config/nvim/"

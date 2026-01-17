@@ -5,6 +5,7 @@ default=("uv" "firefox" "pipewire-pulse" "pavucontrol")
 idk() {
   for i in $@; do
     if ! package_exist "$i"; then
+      echo "installing $i"
       paru -S "$i" --noconfirm
     fi
   done
