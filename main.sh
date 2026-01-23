@@ -8,20 +8,19 @@ check_command() {
 neccesary() {
   mkdir -p "$HOME/.config"
   if check_command pipewire-pulse; then
-    sudo systemctl enable pipewire-pulse --now >/dev/null || true
+    sudo systemctl enable pipewire-pulse --now >/dev/null 2>&1
   fi
   #  zed_install
 }
 
 scripts() {
-  dir="$(find "$(dirname "$0")" -name "config" -type d)"
-  cd "$dir" || exit
-  files=$(find . -name "*.sh" -type f)
-  for script in ${files[@]}; do
-    $script
+  cd "$(find "$(dirname "$0")" -name "config" -type d)"
+  for dir in $(find . -maxdepth 1 -type d); do
+    $(find "$dir" -name "*.sh")
   done
-  cd "$cwd" || exit
+  cd "$cwd"
 }
+
 zed_install() {
   if ! check_command zeditor; then
     paru -S zed --noconfirm
@@ -40,7 +39,12 @@ git_cred() {
 }
 
 clearSource() {
-  sudo rm -rf /tmp/* /var/tmp/* /var/log/*.log
+  if [[ -d /tmp ]]; then
+    sudo rm -rf tmp/*
+  fi
+  if [[ -d /var/tmp ]]; then
+    sudo rm -rf /var/tmp/*
+  fi
   paru -Rns "$(paru -Qtdq)" --noconfirm >/dev/null || true
   clear
   source ~/.bashrc
@@ -48,12 +52,12 @@ clearSource() {
 
 paru_install() {
   if ! check_command paru; then
-    git clone https://aur.archlinux.org/paru.git
-    cd paru || exit
+    git clone https://aur.archlinux.org/paru.git "$HOME/paru"
+    cd "$HOME/paru"
     makepkg -si --noconfirm
   fi
-  cd .. || exit
-  rm -rf paru/
+  cd $cwd
+  rm -rf "$HOME/paru/"
 }
 
 paru_install

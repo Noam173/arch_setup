@@ -1,5 +1,5 @@
-echo "running nvim setup"
-. "$(dirname "$(dirname "$0")")/install_pkgs.sh"
+#!/usr/bin/env bash
+. ./install_pkgs.sh
 idk neovim npm
 
 if [ -d "$HOME/.config/nvim/" ]; then

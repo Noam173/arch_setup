@@ -1,5 +1,5 @@
-echo "running bash setup"
-. "$(dirname "$(dirname "$0")")/install_pkgs.sh"
+#!/usr/bin/env bash
+. ./install_pkgs.sh
 file=$(find "$(dirname "$0")" -name .bashrc -type f)
 cp "$file" "$HOME"
 idk fastfetch bat

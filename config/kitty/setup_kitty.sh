@@ -1,5 +1,5 @@
-echo "running kitty setup"
-. "$(dirname "$(dirname "$0")")/install_pkgs.sh"
+#!/usr/bin/env bash
+. ./install_pkgs.sh
 files=$(find "$(dirname "$0")" -not -name "*.sh" -type f)
 mkdir -p "$HOME/.config/kitty"
 for i in $files; do
