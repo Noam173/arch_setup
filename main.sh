@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-
+noconfirm="$1"
 cwd="$PWD"
 check_command() {
   command -v "$1" >/dev/null 2>&1 || return 1
@@ -15,8 +15,15 @@ neccesary() {
 
 scripts() {
   cd "$(find "$(dirname "$0")" -name "config" -type d)"
-  for dir in $(find . -maxdepth 1 -type d); do
-    $(find "$dir" -name "*.sh")
+  for dir in $(find . -mindepth 1 -maxdepth 1 -type d); do
+    if [[ ! -z "$noconfirm" ]]; then
+      $(find "$dir" -name "*.sh")
+    else
+      read -p "run "$dir" setup? [Y/n] " ans
+      if [[ "$ans" != 'n' ]] && [[ "$ans" != "N" ]]; then
+        $(find "$dir" -name "*.sh")
+      fi
+    fi
   done
   cd "$cwd"
 }
@@ -45,7 +52,7 @@ clearSource() {
   if [[ -d /var/tmp ]]; then
     sudo rm -rf /var/tmp/*
   fi
-  paru -Rns "$(paru -Qtdq)" --noconfirm >/dev/null || true
+  paru -Rns "$(paru -Qtdq)" --noconfirm >/dev/null 2>&1
   clear
   source ~/.bashrc
 }
